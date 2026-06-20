@@ -1,0 +1,14 @@
+# gemma4:12b tuned as the local LLM for the voice-agent pipeline
+# (~/dev/voice-agent — streaming STT -> LLM -> TTS under an 800ms budget).
+#
+# Voice is latency-bound, so context is kept SMALL: a big num_ctx slows prompt
+# processing and pushes out time-to-first-token, which feels broken mid-speech.
+# 8192 holds the system prompt + ~10-20 conversational turns with the snappiest
+# first token. Bump to 16384 only if real conversations run out of history.
+#
+# Build:   ollama create gemma4-12b-voice -f models/gemma4-12b-voice.Modelfile
+# Serve:   Ollama OpenAI-compatible endpoint at http://localhost:11434/v1
+
+FROM gemma4:12b
+
+PARAMETER num_ctx 8192

@@ -1,0 +1,16 @@
+# gemma4:12b tuned for the Hermes agent (Nous Research) running locally.
+# Hermes requires >= 64000 tokens of context for agentic / tool-use work;
+# Ollama's default context is far too small and the agent breaks after a few
+# tool calls. gemma4:12b supports up to 262144 natively.
+#
+# 131072 (128K) is chosen over the 64K floor so long, multi-step agent
+# sessions don't truncate early. On 24GB unified memory this leaves healthy
+# headroom (~7.6GB weights + ~6GB KV cache). The full 262144 would sit too
+# close to the ceiling alongside macOS and risk swapping.
+#
+# Build:   ollama create gemma4-12b-hermes -f models/gemma4-12b-hermes.Modelfile
+# Use:     point the Hermes config at the model name `gemma4-12b-hermes`
+
+FROM gemma4:12b
+
+PARAMETER num_ctx 131072
