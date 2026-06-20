@@ -1,4 +1,4 @@
-# models
+# ollama-nothink
 
 Local Ollama model configurations and tooling for running **Gemma 4 (12B)** across
 several workflows on a single machine — agentic coding, a Hermes tool-use agent, and
