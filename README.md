@@ -6,7 +6,7 @@ a low-latency voice pipeline — plus a small proxy that forces thinking off for
 that can't request it themselves.
 
 ![Ollama](https://img.shields.io/badge/Ollama-0.30%2B-000000)
-![Model](https://img.shields.io/badge/model-gemma4%3A12b-4285F4)
+![Runtime](https://img.shields.io/badge/runtime-local-4285F4)
 ![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB)
 ![Deps](https://img.shields.io/badge/dependencies-none-success)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
