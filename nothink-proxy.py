@@ -2,21 +2,26 @@
 # ponytail: stdlib-only proxy. Forces thinking off for Ollama's Anthropic endpoint
 # because ollama_launch_claude can't pass thinking:{type:disabled} itself.
 # Point Claude Code at this: ANTHROPIC_BASE_URL=http://localhost:11435
-import http.server, urllib.request, json
+import http.server, urllib.request, json, sys
 
 UPSTREAM = "http://localhost:11434"
 PORT = 11435
 
+def log(*a): print(*a, file=sys.stderr, flush=True)
+
 class H(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         body = self.rfile.read(int(self.headers.get("content-length", 0)))
-        if self.path.endswith("/v1/messages"):
+        patched = False
+        if self.path.split("?")[0].endswith("/v1/messages"):
             try:
                 d = json.loads(body)
                 d["thinking"] = {"type": "disabled"}
                 body = json.dumps(d).encode()
+                patched = True
             except Exception:
                 pass  # not JSON we understand — pass through untouched
+        log(f"{self.command} {self.path}  thinking-disabled={patched}")
         req = urllib.request.Request(UPSTREAM + self.path, data=body, method="POST",
             headers={k: v for k, v in self.headers.items() if k.lower() != "content-length"})
         try:

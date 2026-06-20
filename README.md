@@ -60,6 +60,10 @@ ANTHROPIC_BASE_URL=http://localhost:11435 ollama launch claude --model gemma4-12
 
 Keep it alive across reboots with `nohup python3 nothink-proxy.py &` or a LaunchAgent.
 
+Two gotchas to wiring this up (`ollama launch` overriding the base URL, and
+Claude Code's `?beta=true` query string) are written up in
+[`docs/nothink-proxy.md`](docs/nothink-proxy.md).
+
 ## Notes
 
 - All endpoints are localhost; the proxy adds no auth (Ollama ignores it locally).
