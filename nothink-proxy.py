@@ -36,6 +36,22 @@ class H(http.server.BaseHTTPRequestHandler):
         while chunk := up.read(1024):   # stream SSE straight through
             self.wfile.write(chunk); self.wfile.flush()
 
+    def do_GET(self):  # passthrough for /v1/models discovery, etc — no patching needed
+        log(f"{self.command} {self.path}")
+        req = urllib.request.Request(UPSTREAM + self.path, method="GET",
+            headers={k: v for k, v in self.headers.items() if k.lower() != "content-length"})
+        try:
+            up = urllib.request.urlopen(req)
+        except urllib.error.HTTPError as e:
+            up = e
+        self.send_response(up.status)
+        for k, v in up.headers.items():
+            if k.lower() not in ("transfer-encoding", "content-length", "connection"):
+                self.send_header(k, v)
+        self.end_headers()
+        while chunk := up.read(1024):
+            self.wfile.write(chunk); self.wfile.flush()
+
     def log_message(self, *a): pass
 
 http.server.ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
