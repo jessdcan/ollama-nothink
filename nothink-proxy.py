@@ -54,4 +54,8 @@ class H(http.server.BaseHTTPRequestHandler):
 
     def log_message(self, *a): pass
 
-http.server.ThreadingHTTPServer(("127.0.0.1", PORT), H).serve_forever()
+import socketserver
+class DualStackServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
+    address_family = __import__("socket").AF_INET6
+
+DualStackServer(("::", PORT), H).serve_forever()
