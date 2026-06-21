@@ -3,14 +3,14 @@
 # Ollama's default context is far too small and the agent breaks after a few
 # tool calls. gemma4:12b supports up to 262144 natively.
 #
-# 131072 (128K) is chosen over the 64K floor so long, multi-step agent
-# sessions don't truncate early. On 24GB unified memory this leaves healthy
-# headroom (~7.6GB weights + ~6GB KV cache). The full 262144 would sit too
-# close to the ceiling alongside macOS and risk swapping.
+# 65536 (64K) is the Hermes floor for agentic / tool-use work — the smallest
+# context that survives multi-step tool calls without truncating. Lighter on
+# KV cache than 128K, leaving more headroom on 24GB unified memory; bump back
+# up if long sessions start losing early context.
 #
-# Build:   ollama create gemma4-12b-hermes -f models/gemma4-12b-hermes.Modelfile
+# Build:   ollama create gemma4-12b-hermes -f gemma4-12b-hermes.Modelfile
 # Use:     point the Hermes config at the model name `gemma4-12b-hermes`
 
 FROM gemma4:12b
 
-PARAMETER num_ctx 131072
+PARAMETER num_ctx 65536
